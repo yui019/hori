@@ -1,4 +1,5 @@
 src = files(
     'rlImGui/rlImGui.cpp',
-    'main.cpp'
+    'main.cpp',
+    'hori.cpp'
 )

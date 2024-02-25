@@ -2,6 +2,7 @@
 
 #include "imgui.h"
 #include "rlImGui/rlImGui.h"
+#include "hori.hpp"
 
 int main() {
 	int screenWidth  = 1280;
@@ -12,19 +13,15 @@ int main() {
 	SetTargetFPS(60);
 	rlImGuiSetup(true);
 
-	while (!WindowShouldClose()) {
-		BeginDrawing();
-		{
-			ClearBackground(DARKGRAY);
+	Hori hori;
 
-			rlImGuiBegin();
-			{
-				bool open = true;
-				ImGui::ShowDemoWindow(&open);
-			}
-			rlImGuiEnd();
+	while (!WindowShouldClose()) {
+		if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+			const Vector2 pos = GetMousePosition();
+			hori.open_right_click_menu(pos);
 		}
-		EndDrawing();
+
+		hori.render();
 	}
 
 	rlImGuiShutdown();
