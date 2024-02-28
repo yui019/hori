@@ -1,5 +1,5 @@
-#ifndef HORI_NEW_TABLE_H
-#define HORI_NEW_TABLE_H
+#ifndef UI_NEW_TABLE_H
+#define UI_NEW_TABLE_H
 
 #include <string>
 #include <imgui.h>
@@ -45,4 +45,4 @@ void render_popup(State &state, F1 &&on_create, F2 &&on_cancel) {
 
 } // namespace ui::new_table
 
-#endif // HORI_NEW_TABLE_H
+#endif // UI_NEW_TABLE_H
