@@ -1,5 +1,6 @@
 #include "hori.hpp"
 #include "src/table.hpp"
+#include "src/ui/new_table.hpp"
 #include "type_declarations.hpp"
 
 #include <cstddef>
@@ -9,7 +10,6 @@
 
 #include <imgui.h>
 #include <rlImGui/rlImGui.h>
-#include <string>
 
 Hori::Hori() {
 	using enum TypeDeclarationOptionType;
@@ -73,11 +73,6 @@ void Hori::open_right_click_menu(Vector2 position) {
 	_right_click_menu_position = position;
 }
 
-void Hori::open_new_table_dialog() {
-	_new_table_dialog_state.buf_table_name.clear();
-	ImGui::OpenPopup("New table");
-}
-
 bool Hori::create_table(const char *name) {
 	if (strlen(name) == 0) {
 		return false;
@@ -89,41 +84,6 @@ bool Hori::create_table(const char *name) {
 	_tables.push_back(table);
 
 	return true;
-}
-
-void Hori::_render_new_table_dialog() {
-	// Always center this window when appearing
-	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-	ImGui::SetNextWindowSize(ImVec2(300.0f, 0.0f));
-
-	if (ImGui::BeginPopupModal("New table")) {
-		ImGui::Text("Table name:");
-		ImGui::InputText("##tableName",
-		                 _new_table_dialog_state.buf_table_name.data,
-		                 _new_table_dialog_state.buf_table_name.size);
-
-		ImGui::Separator();
-
-		if (ImGui::Button("Create table")) {
-			bool success =
-			    create_table(_new_table_dialog_state.buf_table_name.data);
-
-			if (success) {
-				ImGui::CloseCurrentPopup();
-				_right_click_menu_open = false;
-			}
-		}
-
-		ImGui::SameLine();
-		if (ImGui::Button("Cancel")) {
-			ImGui::CloseCurrentPopup();
-			_right_click_menu_open = false;
-		}
-
-		ImGui::EndPopup();
-	}
 }
 
 void Hori::_render_right_click_menu() {
@@ -143,7 +103,7 @@ void Hori::_render_right_click_menu() {
 	const ImVec2 size = ImVec2(ImGui::GetContentRegionAvail().x, 0.0f);
 
 	if (ImGui::Button("New table", size)) {
-		open_new_table_dialog();
+		ui::new_table::open_popup(_new_table_dialog_state);
 	}
 
 	ImGui::Button("Open file", size);
@@ -153,7 +113,21 @@ void Hori::_render_right_click_menu() {
 	ImGui::PopStyleVar();
 
 	// has to be rendered within here because it's a popup
-	_render_new_table_dialog();
+	ui::new_table::render_popup(
+	    _new_table_dialog_state,
+	    [&] {
+		    bool success =
+		        create_table(_new_table_dialog_state.str_table_name.c_str());
+
+		    if (success) {
+			    ImGui::CloseCurrentPopup();
+			    _right_click_menu_open = false;
+		    }
+	    },
+	    [&] {
+		    ImGui::CloseCurrentPopup();
+		    _right_click_menu_open = false;
+	    });
 
 	ImGui::End();
 }
