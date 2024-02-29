@@ -1,6 +1,7 @@
 #include "hori.hpp"
 #include "src/table.hpp"
 #include "src/ui/new_table.hpp"
+#include "src/ui/table.hpp"
 #include "type_declarations.hpp"
 
 #include <cstddef>
@@ -10,6 +11,7 @@
 
 #include <imgui.h>
 #include <rlImGui/rlImGui.h>
+#include <utility>
 
 Hori::Hori() {
 	using enum TypeDeclarationOptionType;
@@ -81,7 +83,7 @@ bool Hori::create_table(const char *name) {
 	Table table = {};
 	table.name  = name;
 
-	_tables.push_back(table);
+	_tables.push_back({ui::table::State{}, table});
 
 	return true;
 }
@@ -133,40 +135,8 @@ void Hori::_render_right_click_menu() {
 }
 
 void Hori::_render_tables() {
-	for (auto table : _tables) {
-		ImGui::SetNextWindowSizeConstraints(ImVec2(180.0f, 100.0f),
-		                                    ImVec2(1000.0f, 1000.0f));
-
-		ImGui::Begin(table.name.c_str());
-
-		if (ImGui::BeginTable(table.name.c_str(), 2)) {
-			for (auto field : table.fields) {
-				ImGui::TableNextColumn();
-
-				ImGui::Text("%s", field.name.c_str());
-				ImGui::TableNextColumn();
-
-				if (field.type.options.empty()) {
-					// display just the type name
-
-					ImGui::Text("%s", field.type.type_name.data());
-				} else {
-					// display a type with options like "VARCHAR (10, 2)"
-
-					std::string options_string = field.type.options[0];
-					for (size_t i = 1; i < field.type.options.size(); i++) {
-						options_string += ", ";
-						options_string += field.type.options[i];
-					}
-
-					ImGui::Text("%s (%s)", field.type.type_name.data(),
-					            options_string.c_str());
-				}
-			}
-
-			ImGui::EndTable();
-		}
-
-		ImGui::End();
+	for (size_t i = 0; i < _tables.size(); i++) {
+		ui::table::render(_tables[i].ui_state, _tables[i].data,
+		                  TYPE_DECLARATIONS, [&] {});
 	}
 }
