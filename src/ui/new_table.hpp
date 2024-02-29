@@ -8,11 +8,11 @@
 namespace ui::new_table {
 
 struct State {
-	std::string str_table_name;
+	std::string table_name;
 };
 
 inline void open_popup(State &state) {
-	state.str_table_name.clear();
+	state.table_name.clear();
 	ImGui::OpenPopup("New table");
 }
 
@@ -26,7 +26,7 @@ void render_popup(State &state, F1 &&on_create, F2 &&on_cancel) {
 
 	if (ImGui::BeginPopupModal("New table")) {
 		ImGui::Text("Table name:");
-		ImGui::InputText("##tableName", &state.str_table_name);
+		ImGui::InputText("##tableName", &state.table_name);
 
 		ImGui::Separator();
 

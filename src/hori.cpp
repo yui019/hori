@@ -117,7 +117,7 @@ void Hori::_render_right_click_menu() {
 	    _new_table_dialog_state,
 	    [&] {
 		    bool success =
-		        create_table(_new_table_dialog_state.str_table_name.c_str());
+		        create_table(_new_table_dialog_state.table_name.c_str());
 
 		    if (success) {
 			    ImGui::CloseCurrentPopup();
