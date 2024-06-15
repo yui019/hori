@@ -1,0 +1,28 @@
+{
+  "name": "yui019/hori",
+  "version": "1.0.0",
+  "description": "Database schema library for Laravel.",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "Yui019\\Hori\\": "src/"
+    },
+    "classmap": [
+      "src/"
+    ]
+  },
+  "authors": [
+    {
+      "name": "yui019"
+    }
+  ],
+  "require": {},
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Yui019\\Hori\\LaravelCommandServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "dev"
+}

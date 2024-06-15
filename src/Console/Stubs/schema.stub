@@ -1,0 +1,12 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Yui019\Hori\Schema;
+
+return new class extends Schema
+{
+	public function create(): void
+	{
+		// ...
+	}
+};
