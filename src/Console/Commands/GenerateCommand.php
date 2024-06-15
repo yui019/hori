@@ -3,7 +3,6 @@
 namespace Yui019\Hori\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
 
 class GenerateCommand extends Command
 {
