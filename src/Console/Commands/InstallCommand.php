@@ -4,6 +4,7 @@ namespace Yui019\Hori\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Yui019\Hori\Util\StubHelper;
 
 class InstallCommand extends Command
 {
@@ -20,9 +21,9 @@ class InstallCommand extends Command
         File::makeDirectory("database/hori");
         File::makeDirectory("database/hori/.old-schema");
 
-        $contents = file_get_contents(__DIR__ . "/../Stubs/schema.stub");
-        file_put_contents("database/hori/schema.php", $contents);
-        file_put_contents("database/hori/.old-schema/schema.php", $contents);
+        $stub = new StubHelper(__DIR__ . "/../Stubs/schema.stub");
+        $stub->save("database/hori/schema.php");
+        $stub->save("database/hori/.old-schema/schema.php");
 
         $this->info('Done!');
     }
