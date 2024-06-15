@@ -6,12 +6,12 @@ class StubHelper
 {
     protected $content;
 
-    public function __construct($path)
+    public function __construct(string $path)
     {
         $this->content = file_get_contents($path);
     }
 
-    public function replace($key, $value)
+    public function replace(string $key, string $value): void
     {
         $this->content = str_replace(
             $key,
@@ -20,12 +20,12 @@ class StubHelper
         );
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
-    public function save($path)
+    public function save(string $path): void
     {
         file_put_contents($path, $this->content);
     }
