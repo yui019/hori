@@ -1,6 +1,6 @@
 <?php
 
-namespace Yui019\Hori\Console\Commands\GenerateCommand;
+namespace Yui019\Hori\Commands\GenerateCommand;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\ColumnDefinition;

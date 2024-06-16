@@ -1,6 +1,6 @@
 <?php
 
-namespace Yui019\Hori\Console\Commands\GenerateCommand;
+namespace Yui019\Hori\Commands\GenerateCommand;
 
 use Yui019\Hori\Util\StubHelper;
 
