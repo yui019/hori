@@ -271,5 +271,9 @@ class TableOperation
 {
     public string $table;
     public TableOperationType $type;
+
+    /**
+     * @var TableStatement[]
+     */
     public array $statements;
 }
