@@ -7,13 +7,13 @@ use Illuminate\Database\Schema\Blueprint;
 
 class Schema
 {
-    public $blueprints = [];
+    public array $blueprints = [];
 
     public function table(string $name, Closure $callback)
     {
         $blueprint = new Blueprint($name);
         $callback($blueprint);
 
-        $this->blueprints[] = $blueprint;
+        array_push($this->blueprints, $blueprint);
     }
 }

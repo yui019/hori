@@ -4,7 +4,7 @@ namespace Yui019\Hori;
 
 use Illuminate\Support\ServiceProvider;
 use Yui019\Hori\Console\Commands\InstallCommand;
-use Yui019\Hori\Console\Commands\GenerateCommand;
+use Yui019\Hori\Console\Commands\GenerateCommand\GenerateCommand;
 
 class LaravelCommandServiceProvider extends ServiceProvider
 {
