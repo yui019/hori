@@ -9,6 +9,10 @@ use Yui019\Hori\Schema;
 
 class SchemaCompareHelper
 {
+    /**
+     * Return all required operations to go from oldSchema to newSchema
+     * @return TableOperation[]
+     */
     public static function compare(Schema $oldSchema, Schema $newSchema): array
     {
         $createdTables = self::getCreatedTables($oldSchema, $newSchema);
