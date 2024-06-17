@@ -1,6 +1,5 @@
 {
   "name": "yui019/hori",
-  "version": "1.0.0",
   "description": "Database schema library for Laravel inspired by Prisma.",
   "homepage": "https://github.com/yui019/hori",
   "type": "library",
