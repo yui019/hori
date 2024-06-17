@@ -1,8 +1,36 @@
 # Hori
 
-Database schema library for Laravel.
+Database schema library for Laravel inspired by [Prisma](https://www.prisma.io/).
 
-## Example schema
+## How is this different from normal laravel migrations?
+
+In case you've never used the NodeJS library [Prisma](https://www.prisma.io/), what it does is that it handles creating migrations for you.
+You have a single schema file where you write all the tables you have and migrations to add/drop tables or columns are automatically generated according to it.
+
+So if you want to remove a column from a table, all you need to do is remove it in the schema file and run `php artisan hori:generate`, which automatically generates a migration that removes that column.
+
+There's 2 advantages to this approach:
+
+1. It's much easier and faster for you to directly work on a single schema file than to manually create migrations for each change
+2. You don't need to look at all migrations or the database to know what tables and rows you currently have - you just look at the schema file instead
+
+## Usage
+
+You can install Hori with the command:
+
+```
+composer require yui019/hori
+```
+
+After that, you run:
+
+```
+php artisan hori:install
+```
+
+which will create a `hori` directory in the `database` directory with a `schema.php` file inside.
+
+This is what that file looks like by default:
 
 ```php
 <?php
@@ -14,10 +42,6 @@ return new class extends Schema
 {
     public function create(): void
     {
-        /**
-         * create_users_table
-         */
-
         $this->table('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -28,87 +52,42 @@ return new class extends Schema
             $table->timestamps();
         });
 
-        $this->table('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
+        $this->createDefaultLaravelTables();
 
-        $this->table('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
-        });
-
-        /**
-         * create_cache_table
-         */
-
-        $this->table('cache', function (Blueprint $table) {
-            $table->string('key')->primary();
-            $table->mediumText('value');
-            $table->integer('expiration');
-        });
-
-        $this->table('cache_locks', function (Blueprint $table) {
-            $table->string('key')->primary();
-            $table->string('owner');
-            $table->integer('expiration');
-        });
-
-        /**
-         * create_jobs_table
-         */
-
-        $this->table('jobs', function (Blueprint $table) {
-            $table->id();
-            $table->string('queue')->index();
-            $table->longText('payload');
-            $table->unsignedTinyInteger('attempts');
-            $table->unsignedInteger('reserved_at')->nullable();
-            $table->unsignedInteger('available_at');
-            $table->unsignedInteger('created_at');
-        });
-
-        $this->table('job_batches', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('name');
-            $table->integer('total_jobs');
-            $table->integer('pending_jobs');
-            $table->integer('failed_jobs');
-            $table->longText('failed_job_ids');
-            $table->mediumText('options')->nullable();
-            $table->integer('cancelled_at')->nullable();
-            $table->integer('created_at');
-            $table->integer('finished_at')->nullable();
-        });
-
-        $this->table('failed_jobs', function (Blueprint $table) {
-            $table->id();
-            $table->string('uuid')->unique();
-            $table->text('connection');
-            $table->text('queue');
-            $table->longText('payload');
-            $table->longText('exception');
-            $table->timestamp('failed_at')->useCurrent();
-        });
-
-        /**
-         * MY TABLES
-         */
-
-        $this->table('posts', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->text('content');
-            $table->integer('likes')->default(0);
-
-            $table->unsignedBigInteger('author_id');
-            $table->foreign('author_id')->references('id')->on('users');
-        });
+		// ...
     }
 };
 ```
+
+The `$this->createDefaultLaravelTables()` line creates the default laravel tables such as `password_reset_tokens`, `cache`, `jobs`, etc. - i.e. all tables created by the 3 migrations present by default in every laravel project, except for the `users` table.
+
+That table is created in the `schema.php` file right above instead. The reason why I made this choice is that it's very common to want to change something about the default `users` table, whereas all the other ones are left as is 99% of the time, and it felt too cramped to have all those tables in there by default.
+
+This command also deletes those 3 default migrations. You can optionally pass the `--dont-delete-default-migrations` option to avoid that.
+
+---
+
+Next, you run the command:
+
+```
+php artisan hori:generate
+```
+
+and give it a name for the migration.
+
+This will create a migration in the `database/migrations` directory which will create all those tables.
+
+---
+
+Now, say you want to add a `photo` column to the users table. Normally, you would need to manually create an `add_photo_column` migration which adds the column (and drops it in the `down` method).
+
+With Hori, all you do is add a line such as `$table->string('photo');` to the schema file and run `php artisan hori:generate` again. This will automatically create a migration which does the same thing.
+
+## TODO
+
+Hori supports the following operations:
+
+- creating, modifying and dropping tables
+- adding columns, dropping columns and adding foreign key constraints
+
+Renaming tables, modifying columns and renaming columns haven't been implemented yet.

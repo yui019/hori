@@ -1,7 +1,7 @@
 {
   "name": "yui019/hori",
   "version": "1.0.0",
-  "description": "Database schema library for Laravel.",
+  "description": "Database schema library for Laravel inspired by Prisma.",
   "type": "library",
   "autoload": {
     "psr-4": {
