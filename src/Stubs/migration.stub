@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        {{ up }}
-    }
+{{ up }}    }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        {{ down }}
+{{ down }}
     }
 };

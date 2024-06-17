@@ -1,1 +1,1 @@
-Schema::{{ type }}('{{ table }}');
+        Schema::{{ type }}('{{ table }}');
