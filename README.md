@@ -40,8 +40,8 @@ use Yui019\Hori\Schema;
 
 return new class extends Schema
 {
-    public function create(): void
-    {
+	public function create(): void
+	{
         $this->table('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -52,10 +52,10 @@ return new class extends Schema
             $table->timestamps();
         });
 
-        $this->createDefaultLaravelTables();
+		$this->createDefaultLaravelTables();
 
 		// ...
-    }
+	}
 };
 ```
 
