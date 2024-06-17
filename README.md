@@ -91,4 +91,5 @@ Hori supports the following operations:
 - adding columns, dropping columns and adding foreign key constraints
 
 Renaming tables, modifying columns and renaming columns haven't been implemented yet.
+
 Also, I'm planning to add automatic reordering of tables according to foreign key constraints.
