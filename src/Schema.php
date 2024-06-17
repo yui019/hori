@@ -9,7 +9,10 @@ class Schema
 {
     public array $blueprints = [];
 
-    public function table(string $name, Closure $callback)
+    /**
+     * Create a new table.
+     */
+    public function table(string $name, Closure $callback): void
     {
         $blueprint = new Blueprint($name);
         $callback($blueprint);
