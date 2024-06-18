@@ -94,4 +94,4 @@ With Hori, all you do is add a line such as `$table->string('photo');` to the sc
 - [x] Adding foreign key constraints
 - [ ] Changing columns
 - [ ] Renaming columns
-- [ ] Automatic reordering of created tables according to foreign key constraints
+- [ ] Automatic reordering of created tables according to foreign key constraints (IN PROGRESS)
