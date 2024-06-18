@@ -83,13 +83,15 @@ Now, say you want to add a `photo` column to the users table. Normally, you woul
 
 With Hori, all you do is add a line such as `$table->string('photo');` to the schema file and run `php artisan hori:generate` again. This will automatically create a migration which does the same thing.
 
-## TODO
+## Features
 
-Hori supports the following operations:
-
-- creating, modifying and dropping tables
-- adding columns, dropping columns and adding foreign key constraints
-
-Renaming tables, modifying columns and renaming columns haven't been implemented yet.
-
-Also, I'm planning to add automatic reordering of tables according to foreign key constraints.
+- [x] Creating tables
+- [x] Modifying tables
+- [x] Dropping tables
+- [ ] Renaming tables
+- [x] Adding columns
+- [x] Dropping columns
+- [x] Adding foreign key constraints
+- [ ] Changing columns
+- [ ] Renaming columns
+- [ ] Automatic reordering of created tables according to foreign key constraints
