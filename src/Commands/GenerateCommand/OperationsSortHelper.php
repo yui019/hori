@@ -2,6 +2,7 @@
 
 namespace Yui019\Hori\Commands\GenerateCommand;
 
+use Exception;
 use Illuminate\Support\Stringable;
 
 class OperationsSortHelper
@@ -51,7 +52,7 @@ class OperationsSortHelper
                 if ($statement->type == TableStatementType::AddForeignKeyConstraint) {
                     $attributes = $statement->addedForeignKeyDefinition->getAttributes();
 
-                    $referencedTable = $attributes["references"];
+                    $referencedTable = $attributes["on"];
                     if ($referencedTable instanceof Stringable) {
                         $referencedTable = $referencedTable->toString();
                     }
@@ -65,17 +66,105 @@ class OperationsSortHelper
                 }
             }
 
-            array_push($dependencyGraph, [
-                $operation->table => $references,
-            ]);
+            $dependencyGraph[$operation->table] = $references;
         }
 
-        /**
-         * TODO: do topological sort on $dependencyGraph
-         *
-         * https://rosettacode.org/wiki/Topological_sort#Depth_First
-         */
+        $correctOrder = self::topologicalSort($dependencyGraph);
 
-        return [];
+        $sortedOperations = [];
+        foreach ($correctOrder as $table) {
+            foreach ($operations as $operation) {
+                if ($operation->table == $table) {
+                    array_push($sortedOperations, $operation);
+                    break;
+                }
+            }
+        }
+
+        return $sortedOperations;
+    }
+
+    /**
+     * @param array[string]string[] $dependencyGraph
+     * @return string[]
+     */
+    private static function topologicalSort($dependencyGraph): array
+    {
+        $graph = [];
+        foreach ($dependencyGraph as $key => $value) {
+            $graph[$key] = $value;
+        }
+
+        $result = [];
+
+        $allDependenciesEmpty = true;
+        foreach ($graph as $_ => $dependsOn) {
+            if (!empty($dependsOn)) {
+                $allDependenciesEmpty = false;
+                break;
+            }
+        }
+
+        if ($allDependenciesEmpty) {
+            foreach ($graph as $table => $_) {
+                array_push($result, $table);
+            }
+
+            return $result;
+        }
+
+        $runAlgorithm = function () use (&$graph, &$result) {
+            // Find table with no dependents
+            // =============================
+
+            $tableWithNoDependents = null;
+            foreach ($graph as $table => $_) {
+                $hasDependents = false;
+                foreach ($graph as $_ => $dependsOn) {
+                    if (in_array($table, $dependsOn)) {
+                        $hasDependents = true;
+                        break;
+                    }
+                }
+
+                if (!$hasDependents) {
+                    $tableWithNoDependents = $table;
+                    break;
+                }
+            }
+
+            if ($tableWithNoDependents == null) {
+                return false;
+            }
+
+            // Add it to the result
+            // ====================
+
+            array_push($result, $tableWithNoDependents);
+
+            // Remove that table from the graph
+            // ================================
+            foreach ($graph as $table => $dependsOn) {
+                if (in_array($tableWithNoDependents, $dependsOn)) {
+                    $newDependsOn = array_diff($dependsOn, [$tableWithNoDependents]);
+                    $graph[$table] = $newDependsOn;
+                }
+            }
+            unset($graph[$tableWithNoDependents]);
+
+            return true;
+        };
+
+        while (true) {
+            if (empty($graph)) {
+                break;
+            }
+
+            if ($runAlgorithm() == false) {
+                throw new Exception("Cycle!!");
+            }
+        }
+
+        return array_reverse($result);
     }
 }

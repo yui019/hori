@@ -30,6 +30,7 @@ class MigrationBodyHelper
     private static function getContent(Schema $oldSchema, Schema $newSchema): string
     {
         $operations = SchemaCompareHelper::compare($oldSchema, $newSchema);
+        $operations = OperationsSortHelper::sort($operations);
 
         $contents = [];
         foreach ($operations as $operation) {
