@@ -95,3 +95,5 @@ With Hori, all you do is add a line such as `$table->string('photo');` to the sc
 - [ ] Changing columns
 - [ ] Renaming columns
 - [x] Automatic reordering of created tables according to foreign key constraints
+- [ ] Automatically generate models and controllers from schema
+- [ ] Automatically generate [Laravel Filament](https://filamentphp.com/) resources from schema (maybe like a separate library?)
